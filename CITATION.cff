@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as below."
+title: "Resolving Starvation Responses of Photosymbiotic Holobionts: code, data and supplementary material"
+type: software
+authors:
+  - family-names: Kola
+    given-names: Danjel
+    affiliation: "Carl von Ossietzky Universität Oldenburg"
+doi: 10.5281/zenodo.23264022
+repository-code: "https://github.com/danjelkola52-svg/photosymbiosis-starvation-thesis"
+license: CC-BY-4.0
+abstract: "Code, processed data and supplementary tables for the Master's thesis comparing starvation responses of the photosymbiotic hosts Exaiptasia diaphana and Waminoa sp., including 16S rRNA amplicon analysis."
+keywords:
+  - photosymbiosis
+  - starvation
+  - Exaiptasia
+  - Waminoa
+  - 16S rRNA
+  - DADA2

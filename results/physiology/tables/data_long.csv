@@ -1,0 +1,177 @@
+Parameter,Organism,Treatment,Sample,value
+Total protein,Exaiptasia,Fed,AF1,132.728242
+Total protein,Exaiptasia,Fed,AF2,146.191358
+Total protein,Exaiptasia,Fed,AF3,205.272914
+Total protein,Exaiptasia,Fed,AF4,152.120168
+Total protein,Exaiptasia,Fed,AF5,164.477833
+Total protein,Exaiptasia,Starved,AS1,93.04863
+Total protein,Exaiptasia,Starved,AS2,100.409891
+Total protein,Exaiptasia,Starved,AS3,98.361536
+Total protein,Exaiptasia,Starved,AS4,82.477715
+Total protein,Exaiptasia,Starved,AS5,108.218869
+Total protein,Waminoa,Fed,WF1,127.176523
+Total protein,Waminoa,Fed,WF2,139.61018
+Total protein,Waminoa,Fed,WF3,221.51859
+Total protein,Waminoa,Fed,WF4,247.772179
+Total protein,Waminoa,Fed,WF5,163.962327
+Total protein,Waminoa,Fed,WF6,216.066307
+Total protein,Waminoa,Starved,WS1,102.290732
+Total protein,Waminoa,Starved,WS2,131.653348
+Total protein,Waminoa,Starved,WS3,67.907771
+Total protein,Waminoa,Starved,WS4,80.869203
+Total protein,Waminoa,Starved,WS5,117.225165
+Total protein,Waminoa,Starved,WS6,115.234421
+Symbionts per animal,Exaiptasia,Fed,AF1,125.333333333
+Symbionts per animal,Exaiptasia,Fed,AF2,130.833333333
+Symbionts per animal,Exaiptasia,Fed,AF3,143.5
+Symbionts per animal,Exaiptasia,Fed,AF4,26.95
+Symbionts per animal,Exaiptasia,Fed,AF5,165.16666666700002
+Symbionts per animal,Exaiptasia,Starved,AS1,38.45
+Symbionts per animal,Exaiptasia,Starved,AS2,14.1
+Symbionts per animal,Exaiptasia,Starved,AS3,19.116666667
+Symbionts per animal,Exaiptasia,Starved,AS4,13.35
+Symbionts per animal,Exaiptasia,Starved,AS5,25.483333333
+Symbionts per animal,Waminoa,Fed,WF1,63
+Symbionts per animal,Waminoa,Fed,WF2,42.633333333
+Symbionts per animal,Waminoa,Fed,WF3,35.85
+Symbionts per animal,Waminoa,Fed,WF4,12.983333333000001
+Symbionts per animal,Waminoa,Fed,WF5,36.75
+Symbionts per animal,Waminoa,Fed,WF6,120.5
+Symbionts per animal,Waminoa,Starved,WS1,30.325
+Symbionts per animal,Waminoa,Starved,WS2,20.400000000000002
+Symbionts per animal,Waminoa,Starved,WS3,53.725
+Symbionts per animal,Waminoa,Starved,WS4,14.875
+Symbionts per animal,Waminoa,Starved,WS5,34.7
+Symbionts per animal,Waminoa,Starved,WS6,55.975
+Symbiont density,Exaiptasia,Fed,AF1,944.2853415703345
+Symbiont density,Exaiptasia,Fed,AF2,894.9457418201149
+Symbiont density,Exaiptasia,Fed,AF3,699.0693375162006
+Symbiont density,Exaiptasia,Fed,AF4,177.16257058038482
+Symbiont density,Exaiptasia,Fed,AF5,1004.1880030544907
+Symbiont density,Exaiptasia,Starved,AS1,413.2247836427038
+Symbiont density,Exaiptasia,Starved,AS2,140.42441296943545
+Symbiont density,Exaiptasia,Starved,AS3,194.35103846893975
+Symbiont density,Exaiptasia,Starved,AS4,161.86190415192758
+Symbiont density,Exaiptasia,Starved,AS5,235.47957549805847
+Symbiont density,Waminoa,Fed,WF1,495.3744489460527
+Symbiont density,Waminoa,Fed,WF2,305.37410189572137
+Symbiont density,Waminoa,Fed,WF3,161.83743314725868
+Symbiont density,Waminoa,Fed,WF4,52.40028717267729
+Symbiont density,Waminoa,Fed,WF5,224.13685309552847
+Symbiont density,Waminoa,Fed,WF6,557.6991696349954
+Symbiont density,Waminoa,Starved,WS1,296.45892063808867
+Symbiont density,Waminoa,Starved,WS2,154.9523829807959
+Symbiont density,Waminoa,Starved,WS3,791.1465684833037
+Symbiont density,Waminoa,Starved,WS4,183.93899591170697
+Symbiont density,Waminoa,Starved,WS5,296.0115261940557
+Symbiont density,Waminoa,Starved,WS6,485.748958637975
+Net O2 per animal,Exaiptasia,Fed,AF1,5.84659090909091
+Net O2 per animal,Exaiptasia,Fed,AF2,3.17219387755102
+Net O2 per animal,Exaiptasia,Fed,AF3,3.47596153846154
+Net O2 per animal,Exaiptasia,Fed,AF4,4.06185233160621
+Net O2 per animal,Exaiptasia,Fed,AF5,3.5625
+Net O2 per animal,Exaiptasia,Starved,AS1,0.98689516129032
+Net O2 per animal,Exaiptasia,Starved,AS2,0.8110116534369181
+Net O2 per animal,Exaiptasia,Starved,AS3,0.159592529711374
+Net O2 per animal,Exaiptasia,Starved,AS4,0.159592529711374
+Net O2 per animal,Exaiptasia,Starved,AS5,-0.02252944188428
+Net O2 per animal,Waminoa,Fed,WF1,3.33201581027668
+Net O2 per animal,Waminoa,Fed,WF2,3.10339660339661
+Net O2 per animal,Waminoa,Fed,WF3,2.7882973380211
+Net O2 per animal,Waminoa,Fed,WF4,2.5770416024653295
+Net O2 per animal,Waminoa,Fed,WF5,2.7272727272727297
+Net O2 per animal,Waminoa,Fed,WF6,3.46207792207792
+Net O2 per animal,Waminoa,Starved,WS1,1.55301455301455
+Net O2 per animal,Waminoa,Starved,WS2,3.1095902353966896
+Net O2 per animal,Waminoa,Starved,WS3,1.64742014742015
+Net O2 per animal,Waminoa,Starved,WS4,0.950450450450451
+Net O2 per animal,Waminoa,Starved,WS5,2.61273115220484
+Net O2 per animal,Waminoa,Starved,WS6,1.23115220483641
+O2 per protein,Exaiptasia,Fed,AF1,1.376541745419117
+O2 per protein,Exaiptasia,Fed,AF2,0.678091099430579
+O2 per protein,Exaiptasia,Fed,AF3,0.5291677112204055
+O2 per protein,Exaiptasia,Fed,AF4,0.8344250932111386
+O2 per protein,Exaiptasia,Fed,AF5,0.6768579265024728
+O2 per protein,Exaiptasia,Starved,AS1,0.331444684250832
+O2 per protein,Exaiptasia,Starved,AS2,0.2524065499673104
+O2 per protein,Exaiptasia,Starved,AS3,0.05070342286521875
+O2 per protein,Exaiptasia,Starved,AS4,0.06046804950258912
+O2 per protein,Exaiptasia,Starved,AS5,-0.0065057514035167935
+O2 per protein,Waminoa,Fed,WF1,0.818747765821104
+O2 per protein,Waminoa,Fed,WF2,0.6946566780169185
+O2 per protein,Waminoa,Fed,WF3,0.39334979431369343
+O2 per protein,Waminoa,Fed,WF4,0.3250266046901156
+O2 per protein,Waminoa,Fed,WF5,0.5197978967892595
+O2 per protein,Waminoa,Fed,WF6,0.5007256178305255
+O2 per protein,Waminoa,Starved,WS1,0.4744486996310153
+O2 per protein,Waminoa,Starved,WS2,0.738110320264294
+O2 per protein,Waminoa,Starved,WS3,0.758114702467258
+O2 per protein,Waminoa,Starved,WS4,0.3672792048732889
+O2 per protein,Waminoa,Starved,WS5,0.696504445153916
+O2 per protein,Waminoa,Starved,WS6,0.3338716510853803
+Fv/Fm,Exaiptasia,Fed,AF1,0.635
+Fv/Fm,Exaiptasia,Fed,AF2,0.696
+Fv/Fm,Exaiptasia,Fed,AF3,0.718
+Fv/Fm,Exaiptasia,Fed,AF4,0.645
+Fv/Fm,Exaiptasia,Fed,AF5,0.582
+Fv/Fm,Exaiptasia,Starved,AS1,0.553
+Fv/Fm,Exaiptasia,Starved,AS2,0.532
+Fv/Fm,Exaiptasia,Starved,AS3,0.551
+Fv/Fm,Exaiptasia,Starved,AS4,0.536
+Fv/Fm,Exaiptasia,Starved,AS5,0.569
+Fv/Fm,Waminoa,Fed,WF1,0.597
+Fv/Fm,Waminoa,Fed,WF2,0.63
+Fv/Fm,Waminoa,Fed,WF3,0.587
+Fv/Fm,Waminoa,Fed,WF4,0.641
+Fv/Fm,Waminoa,Fed,WF5,0.615
+Fv/Fm,Waminoa,Fed,WF6,0.597
+Fv/Fm,Waminoa,Starved,WS1,0.622
+Fv/Fm,Waminoa,Starved,WS2,0.594
+Fv/Fm,Waminoa,Starved,WS3,0.62
+Fv/Fm,Waminoa,Starved,WS4,0.592
+Fv/Fm,Waminoa,Starved,WS5,0.552
+Fv/Fm,Waminoa,Starved,WS6,0.678
+NH4 per protein,Exaiptasia,Fed,AF1,0.05735407273005244
+NH4 per protein,Exaiptasia,Fed,AF2,0.04674033939817427
+NH4 per protein,Exaiptasia,Fed,AF3,0.0531562208446069
+NH4 per protein,Exaiptasia,Fed,AF4,0.04641882495817385
+NH4 per protein,Exaiptasia,Fed,AF5,0.03768657964383565
+NH4 per protein,Exaiptasia,Starved,AS1,-0.04104502542380258
+NH4 per protein,Exaiptasia,Starved,AS2,0.023011589296516616
+NH4 per protein,Exaiptasia,Starved,AS3,0.027813037283191674
+NH4 per protein,Exaiptasia,Starved,AS4,0.002981936223621132
+NH4 per protein,Exaiptasia,Starved,AS5,-0.013649676989324292
+NH4 per protein,Waminoa,Fed,WF1,0.027607119200766323
+NH4 per protein,Waminoa,Fed,WF2,0.040075203391328626
+NH4 per protein,Waminoa,Fed,WF3,0.01772410853644383
+NH4 per protein,Waminoa,Fed,WF4,0.027072173454147166
+NH4 per protein,Waminoa,Fed,WF5,0.020459055920815275
+NH4 per protein,Waminoa,Fed,WF6,0.013467076683085069
+NH4 per protein,Waminoa,Starved,WS1,0.03336645124408729
+NH4 per protein,Waminoa,Starved,WS2,0.026668348988739734
+NH4 per protein,Waminoa,Starved,WS3,0.08459385698287757
+NH4 per protein,Waminoa,Starved,WS4,0.02593781530158026
+NH4 per protein,Waminoa,Starved,WS5,0.027951600119308855
+NH4 per protein,Waminoa,Starved,WS6,0.04235521177305173
+O2 per cell,Exaiptasia,Fed,AF1,1.4577603662998153
+O2 per cell,Exaiptasia,Fed,AF2,0.7576896204360911
+O2 per cell,Exaiptasia,Fed,AF3,0.756960265344412
+O2 per cell,Exaiptasia,Fed,AF4,4.709940087669539
+O2 per cell,Exaiptasia,Fed,AF5,0.6740350655889524
+O2 per cell,Exaiptasia,Starved,AS1,0.8020929464323147
+O2 per cell,Exaiptasia,Starved,AS2,1.7974549056669284
+O2 per cell,Exaiptasia,Starved,AS3,0.26088578308945815
+O2 per cell,Exaiptasia,Starved,AS4,0.37357801898729864
+O2 per cell,Exaiptasia,Starved,AS5,-0.027627667451653078
+O2 per cell,Waminoa,Fed,WF1,1.6527856201769244
+O2 per cell,Waminoa,Fed,WF2,2.274772725337818
+O2 per cell,Waminoa,Fed,WF3,2.4305241788886853
+O2 per cell,Waminoa,Fed,WF4,6.2027638058363905
+O2 per cell,Waminoa,Fed,WF5,2.3191094619666073
+O2 per cell,Waminoa,Fed,WF6,0.8978417847712448
+O2 per cell,Waminoa,Starved,WS1,1.6003859779622323
+O2 per cell,Waminoa,Starved,WS2,4.76346543412483
+O2 per cell,Waminoa,Starved,WS3,0.9582481080852431
+O2 per cell,Waminoa,Starved,WS4,1.9967446438034684
+O2 per cell,Waminoa,Starved,WS5,2.3529639339020534
+O2 per cell,Waminoa,Starved,WS6,0.6873337454423907

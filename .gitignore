@@ -1,0 +1,11 @@
+.Rhistory
+.RData
+.Rproj.user/
+*.fq
+*.fastq
+*.fastq.gz
+16S/raw_fastq/
+16S/reference_db/*.gz
+16S/dada2_out/checkpoints/
+16S/dada2_out/filtered/
+~$*
