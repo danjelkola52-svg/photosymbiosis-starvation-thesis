@@ -1,0 +1,17 @@
+Column,Meaning
+Organism,Host species (the workbook says 'Aiptasia'; relabelled Exaiptasia in the analysis)
+Sample,"Animal ID (A = Exaiptasia, W = Waminoa; F = fed, S = starved)"
+Treatment,Feeding treatment
+protein_ug,Soluble host protein per animal (ug)
+symbionts_animal,Symbiont cells per animal
+symbionts_per_ug,Symbiont cells per ug host protein
+nh4_uM,Net NH4+ uptake over the 3 h incubation (uM)
+nh4_per_protein,NH4+ uptake per ug host protein (uM ug-1)
+nh4_per_cell,NH4+ uptake per symbiont cell (uM cell-1)
+ddO2_mgL_h,Blank-corrected O2 change per time (mg L-1 h-1)
+o2_rate_protein_raw,O2 rate per ug protein (workbook value)
+o2_rate_cell_raw,O2 rate per cell (workbook value)
+fvfm,Maximum quantum yield of PSII after dark adaptation
+o2_ug_h,Net O2 production per animal (ug O2 h-1)
+o2_nmol_protein,Net O2 production per ug host protein (nmol O2 h-1 ug-1)
+o2_nmol_cell,Net O2 production per symbiont cell (nmol O2 h-1 cell-1; x 1000 = pmol in the thesis)
