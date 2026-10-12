@@ -24,32 +24,23 @@ jobs:
           use-public-rspm: true
 
       - name: Install CRAN dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: |
-            any::readxl
-            any::dplyr
-            any::tidyr
-            any::purrr
-            any::tibble
-            any::stringr
-            any::readr
-            any::ggplot2
-            any::patchwork
-            any::car
-            any::openxlsx
-            any::vegan
-            any::ggrepel
-            any::ragg
-            any::decontam
-            any::BiocManager
+        shell: Rscript {0}
+        run: |
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          install.packages(c(
+            "readxl", "dplyr", "tidyr", "purrr", "tibble", "stringr",
+            "readr", "ggplot2", "patchwork", "car", "openxlsx",
+            "vegan", "ggrepel", "ragg", "BiocManager"
+          ))
 
       - name: Install Bioconductor dependencies
         shell: Rscript {0}
         run: |
-          if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-          BiocManager::install(c("dada2", "phyloseq", "Biostrings", "ShortRead", "ANCOMBC", "decontam"),
-                              ask = FALSE, update = FALSE)
+          options(repos = c(CRAN = "https://cloud.r-project.org"))
+          BiocManager::install(
+            c("dada2", "phyloseq", "Biostrings", "ShortRead", "ANCOMBC", "decontam"),
+            ask = FALSE, update = FALSE
+          )
 
       - name: Verify saved phyloseq input exists
         run: |
