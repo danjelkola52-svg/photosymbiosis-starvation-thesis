@@ -933,12 +933,22 @@ run_ancom <- function(samples, fixf, grp, comparison, rank) {
   mean_in <- function(l, id) mean(rel[grp_of == l, id]); prev_in <- function(l, id) sprintf("%d of %d", sum(rel[grp_of == l, id] > 0), sum(grp_of == l))
   k <- match(r$taxon, key$id); lfc <- r[[paste0("lfc_", suf)]]; q <- r[[paste0("q_", suf)]]
   ss <- r[[paste0("passed_ss_", suf)]]; if (is.null(ss)) ss <- NA
+  # ANCOMBC2 returns lfc, se, W, p, q but NO confidence limits. Its p-values come from a t reference distribution, not a normal one,
+  # so the 95 % CI must use the same df. The df is not an output column: recover it from W and p (two-sided t), and check it.
+  se_v <- r[[paste0("se_", suf)]]; W_v <- lfc / se_v; p_v <- r[[paste0("p_", suf)]]
+  df_v <- mapply(function(w, p) { if (is.na(w) || is.na(p) || p <= 0 || p >= 1) return(NA_real_)
+    tryCatch(uniroot(function(d) 2 * pt(-abs(w), d) - p, c(0.5, 1e4), extendInt = "no")$root, error = function(e) NA_real_) }, W_v, p_v)
+  df_v <- round(df_v)                                           # df are whole numbers; rounding removes the numerical noise of the p rounding
+  p_chk <- 2 * pt(-abs(W_v), df_v)
+  say("  %s %s: df recovered for %d of %d taxa; p reproduced (rel. error < 1%%) for %d", comparison, rank, sum(!is.na(df_v)), length(df_v),
+      sum(abs(p_chk - p_v) / p_v < 0.01, na.rm = TRUE))
+  ci_lo <- lfc - qt(0.975, df_v) * se_v; ci_hi <- lfc + qt(0.975, df_v) * se_v
   out <- data.frame(Comparison = comparison, Level = rank, Taxon = key$Taxon[k], Family = key$Family[k], Phylum = key$Phylum[k],
     Reference_group = lv[1], Compared_group = lv[2],
     Mean_pct_reference = round(sapply(r$taxon, function(id) mean_in(lv[1], id)), 3), Mean_pct_compared = round(sapply(r$taxon, function(id) mean_in(lv[2], id)), 3),
     Present_in_reference = sapply(r$taxon, function(id) prev_in(lv[1], id)), Present_in_compared = sapply(r$taxon, function(id) prev_in(lv[2], id)),
     Log_fold_change = round(lfc, 3), Fold_change = round(exp(lfc), 2), Higher_in = ifelse(lfc > 0, lv[2], lv[1]),
-    SE = round(r[[paste0("se_", suf)]], 3), p_value = signif(r[[paste0("p_", suf)]], 3), q_value_Holm = signif(q, 3),
+    SE = round(se_v, 3), df = df_v, CI95_low = round(ci_lo, 3), CI95_high = round(ci_hi, 3), p_value = signif(r[[paste0("p_", suf)]], 3), q_value_Holm = signif(q, 3),
     Significant = ifelse(!is.na(q) & q < ALPHA, "YES", "no"), Significance = pstar(q),
     Robust_to_pseudocount = ifelse(is.na(ss), "n/a", ifelse(ss, "yes", "no")), row.names = NULL)
   out$Verdict <- with(out, ifelse(Significant == "YES" & Robust_to_pseudocount != "no", paste("DIFFERENT: higher in", Higher_in),
@@ -982,13 +992,13 @@ forest <- function(level, n_top, title = NULL) {
            sig = factor(ifelse(Significant == "YES", "q < 0.05 (Holm)", "not significant"), levels = c("q < 0.05 (Holm)", "not significant")))
   ggplot(d, aes(Log_fold_change, reorder(key, Log_fold_change))) +
     geom_vline(xintercept = 0, colour = "grey60", linewidth = 0.3) +
-    geom_errorbar(aes(xmin = Log_fold_change - 1.96 * SE, xmax = Log_fold_change + 1.96 * SE, colour = sig), width = 0, orientation = "y", linewidth = 0.45) +
+    geom_errorbar(aes(xmin = CI95_low, xmax = CI95_high, colour = sig), width = 0, orientation = "y", linewidth = 0.45) +
     geom_point(aes(fill = sig, colour = sig), size = 2.3, shape = 21, stroke = 0.4) +
     scale_colour_manual(values = c("q < 0.05 (Holm)" = "#B3262D", "not significant" = "grey45"), name = NULL, drop = FALSE) +
     scale_fill_manual(values = c("q < 0.05 (Holm)" = "#B3262D", "not significant" = "white"), name = NULL, drop = FALSE) +
     scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
     facet_wrap(~ Comparison, scales = "free_y", ncol = 1, labeller = label_wrap_gen(34)) +
-    labs(x = "ANCOM-BC2 log fold change (95 % CI)\n> 0: higher in Starved (Fed vs Starved) or in Waminoa", y = NULL, title = title) +
+    labs(x = "ANCOM-BC2 log fold change (unadjusted 95 % t-CI; colour = Holm q)\n> 0: higher in Starved (Fed vs Starved) or in Waminoa", y = NULL, title = title) +
     theme(axis.text.y = element_text(face = if (level == "Genus") "italic" else "plain", size = 7), legend.position = "bottom") }
 p_anc_genus  <- forest("Genus", 15, "ANCOM-BC2, genus level")
 p_anc_family <- forest("Family", 15, "ANCOM-BC2, family level")
