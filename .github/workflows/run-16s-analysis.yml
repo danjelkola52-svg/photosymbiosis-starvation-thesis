@@ -13,6 +13,7 @@ jobs:
     env:
       RUN_DADA2: "false"
       THREADS: "2"
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -27,6 +28,7 @@ jobs:
         shell: Rscript {0}
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
+
           install.packages(c(
             "readxl", "dplyr", "tidyr", "purrr", "tibble", "stringr",
             "readr", "ggplot2", "patchwork", "car", "openxlsx",
@@ -37,10 +39,33 @@ jobs:
         shell: Rscript {0}
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+          if (!requireNamespace("BiocManager", quietly = TRUE)) {
+            install.packages("BiocManager")
+          }
+
           BiocManager::install(
-            c("dada2", "phyloseq", "Biostrings", "ShortRead", "ANCOMBC", "decontam"),
-            ask = FALSE, update = FALSE
+            c("phyloseq", "ANCOMBC"),
+            ask = FALSE,
+            update = FALSE
           )
+
+          required <- c("phyloseq", "ANCOMBC", "ragg")
+          missing <- required[!vapply(
+            required,
+            requireNamespace,
+            quietly = TRUE,
+            FUN.VALUE = logical(1)
+          )]
+
+          if (length(missing) > 0) {
+            stop(
+              "Packages still missing: ",
+              paste(missing, collapse = ", ")
+            )
+          }
+
+          message("All required packages are installed.")
 
       - name: Verify saved phyloseq input exists
         run: |
