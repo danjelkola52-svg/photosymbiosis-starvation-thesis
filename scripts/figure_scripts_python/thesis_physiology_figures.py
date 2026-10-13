@@ -30,7 +30,7 @@ d['Organism'] = d['Organism'].replace({'Aiptasia': 'Exaiptasia'})
 # (figure number, file stub, column, y-axis label, scale factor)
 FIGS = [
     (4,  'Fig04_TotalProtein',       'Protein (μg / animal)',            'Total protein (µg animal$^{-1}$)', 1),
-    (5,  'Fig05_SymbiontsPerAnimal', 'Symbiont cells (per animal)',      'Symbionts per animal (× 10$^{3}$)', 1e-3),
+    (5,  'Fig05_SymbiontsPerAnimal', 'Symbiont cells (per animal)',      'Symbionts per animal (× 10$^{3}$ cells)', 1e-3),
     (6,  'Fig06_SymbiontDensity',    'Cells / μg protein',               'Symbiont density\n(cells µg$^{-1}$ protein)', 1),
     (7,  'Fig07_NetO2',              'ΔO₂ absolute (µg O₂ h⁻¹)',         'Net O$_2$ production\n(µg O$_2$ h$^{-1}$ animal$^{-1}$)', 1),
     (8,  'Fig08_O2perProtein',       'ΔO₂ (nmol O₂ h⁻¹ µg protein⁻¹)',   'Net O$_2$ per protein\n(nmol O$_2$ h$^{-1}$ µg$^{-1}$)', 1),
