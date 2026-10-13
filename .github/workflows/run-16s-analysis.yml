@@ -1,4 +1,4 @@
-name: Run 16S R analysis
+name: Reproduce thesis analyses (R)
 
 on:
   workflow_dispatch:
@@ -45,12 +45,12 @@ jobs:
           }
 
           BiocManager::install(
-            c("phyloseq", "ANCOMBC"),
+            c("phyloseq", "ANCOMBC", "ALDEx2"),
             ask = FALSE,
             update = FALSE
           )
 
-          required <- c("phyloseq", "ANCOMBC", "ragg")
+          required <- c("phyloseq", "ANCOMBC", "ALDEx2", "ragg")
           missing <- required[!vapply(
             required,
             requireNamespace,
@@ -74,17 +74,23 @@ jobs:
             exit 1
           }
 
+      - name: Run physiology analysis
+        run: Rscript scripts/physiology_analysis.R
+
       - name: Run 16S analysis
         run: Rscript scripts/16S_amplicon_analysis.R
+
+      - name: Run Figure 12 and full ANCOM-BC2 tables
+        run: Rscript scripts/16S_figure12_and_ancombc2_tables.R
 
       - name: Upload analysis outputs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: 16S-analysis-results
+          name: thesis-analysis-results
           path: |
+            results/physiology/
             16S/tables/
             16S/figures/
-            16S/dada2_out/
           if-no-files-found: warn
           retention-days: 14

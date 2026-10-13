@@ -19,8 +19,6 @@
 #          raw reads (only Part 1)       ENA/SRA accession: see README.md, put the 50 fastq files in 16S/raw_fastq/
 #          SILVA (only Part 1)           silva_nr99_v138.2_toGenus_trainset.fa.gz and silva_v138.2_assignSpecies.fa.gz
 #                                        (Zenodo, doi:10.5281/zenodo.14169026) in 16S/reference_db/
-#                                        optional for the 138.1 comparison sheet: silva_nr99_v138.1_train_set.fa.gz,
-#                                        silva_species_assignment_v138.1.fa.gz (doi:10.5281/zenodo.4587955)
 #
 #  THESIS ANALYSIS = 17 animals. Five libraries (AF5, AS1, AS2, WF2, WS4) with 870-1,717 reads after cleaning
 #  and 73-93 % primer-dimer reads are excluded (EXCLUDE_ANIMALS, Part 2). Run with EXCLUDE_ANIMALS="" for
@@ -68,16 +66,10 @@ THREADS     <- as.integer(Sys.getenv("THREADS", "8"))   # CPU threads (on Window
 RESUME      <- TRUE
 N_QC_READS  <- 200000        # reads per library used to estimate the primer-dimer load
 
-# Taxonomy: main = newest SILVA (138.2, Nov 2024). The old 138.1 is run as well, only for the
-# comparison table "SILVA_comparison" in the Excel file. Set old to NULL to skip it.
+# Taxonomy: SILVA 138.2 (Nov 2024).
 SILVA_MAIN <- list(name  = "SILVA_138.2",
                    train = file.path(PROJ, "reference_db/silva_nr99_v138.2_toGenus_trainset.fa.gz"),
                    species = file.path(PROJ, "reference_db/silva_v138.2_assignSpecies.fa.gz"))
-old_db_dir <- file.path(PROJ, "reference_db")
-SILVA_OLD  <- list(name  = "SILVA_138.1",
-                   train = file.path(old_db_dir, "silva_nr99_v138.1_train_set.fa.gz"),
-                   species = file.path(old_db_dir, "silva_species_assignment_v138.1.fa.gz"))
-if (!file.exists(SILVA_OLD$train)) SILVA_OLD <- NULL     # comparison is optional
 # -----------------------------------------------------------------------------
 
 suppressMessages({ library(dada2); library(phyloseq); library(Biostrings); library(ggplot2); library(ShortRead) })
@@ -244,7 +236,7 @@ track$source <- man$source[match(nm, man$Name)]
 write.csv(track, file.path(out, "read_tracking.csv"), row.names = FALSE)
 print(track, row.names = FALSE)
 
-# ---- 8. taxonomy (main database + old one for the comparison) ---------------------
+# ---- 8. taxonomy (SILVA 138.2) ---------------------------------------------------
 classify <- function(db) {
   say("[8/8] assignTaxonomy + addSpecies with %s", db$name)
   stage(paste0("06_taxa_", db$name), {
@@ -253,7 +245,6 @@ classify <- function(db) {
   })
 }
 tx_main <- classify(SILVA_MAIN)
-tx_old  <- if (!is.null(SILVA_OLD)) classify(SILVA_OLD) else NULL
 
 asv_id <- sprintf("ASV%04d", seq_len(ncol(seqtab)))
 dna <- DNAStringSet(colnames(seqtab)); names(dna) <- asv_id
@@ -262,7 +253,6 @@ rename_tax <- function(tx) { tx$tax <- tx$tax[colnames(seqtab), , drop = FALSE];
   tx$boot <- tx$boot[colnames(seqtab), , drop = FALSE]; rownames(tx$boot) <- asv_id; tx }
 tx_main <- rename_tax(tx_main)
 saveRDS(tx_main$tax, file.path(out, "taxa_main.rds"))
-if (!is.null(tx_old)) { tx_old <- rename_tax(tx_old); saveRDS(tx_old$tax, file.path(out, "taxa_old_db.rds")) }
 write.csv(data.frame(ASV = asv_id, tx_main$tax, boot = tx_main$boot, sequence = as.character(dna)),
           file.path(out, "ASV_taxonomy.csv"), row.names = FALSE)
 seq_mat <- seqtab; colnames(seq_mat) <- asv_id
@@ -276,7 +266,7 @@ saveRDS(ps, file.path(out, "ps_raw.rds"))
 writeLines(c(sprintf("trimLeft %s | truncLen %s | maxEE %s | minOverlap %d | length window %d-%d",
                      paste(TRIM_LEFT, collapse = "/"), paste(TRUNC_LEN, collapse = "/"), paste(MAX_EE, collapse = "/"),
                      MIN_OVERLAP, min(LEN_WINDOW), max(LEN_WINDOW)),
-             sprintf("taxonomy: %s (+ %s for comparison)", SILVA_MAIN$name, if (is.null(SILVA_OLD)) "none" else SILVA_OLD$name),
+             sprintf("taxonomy: %s", SILVA_MAIN$name),
              capture.output(sessionInfo())), file.path(out, "dada2_settings_and_session.txt"))
 say("DONE in %.1f h  ->  %s", as.numeric(difftime(Sys.time(), t0, units = "hours")), file.path(out, "ps_raw.rds"))
 
@@ -443,9 +433,8 @@ N_PERM      <- 9999          # PERMANOVA permutations
 FIG_FORMATS <- c("pdf", "png")   # add "tiff" if a journal asks for it (large files)
 FIG_DPI     <- 600
 
-# optional inputs for comparison tables (skipped automatically if missing)
+# optional input (skipped automatically if missing)
 QC_CSV     <- Sys.getenv("QC_CSV",     file.path(PROJ, "dada2_out/qc_summary.csv"))   # primer-dimer % per library (written in PART 1)
-PREV_TRACK <- Sys.getenv("PREV_TRACK", "")   # optional: read tracking of an earlier DADA2 run, for the run-comparison sheet
 
 GROUP_COL <- c("Aiptasia Fed" = "#1F5FA8", "Aiptasia Starved" = "#8FB8E6",
                "Waminoa Fed"  = "#C4501B", "Waminoa Starved"  = "#F2AD85")
@@ -933,12 +922,22 @@ run_ancom <- function(samples, fixf, grp, comparison, rank) {
   mean_in <- function(l, id) mean(rel[grp_of == l, id]); prev_in <- function(l, id) sprintf("%d of %d", sum(rel[grp_of == l, id] > 0), sum(grp_of == l))
   k <- match(r$taxon, key$id); lfc <- r[[paste0("lfc_", suf)]]; q <- r[[paste0("q_", suf)]]
   ss <- r[[paste0("passed_ss_", suf)]]; if (is.null(ss)) ss <- NA
+  # ANCOMBC2 returns lfc, se, W, p, q but NO confidence limits. Its p-values come from a t reference distribution, not a normal one,
+  # so the 95 % CI must use the same df. The df is not an output column: recover it from W and p (two-sided t), and check it.
+  se_v <- r[[paste0("se_", suf)]]; W_v <- lfc / se_v; p_v <- r[[paste0("p_", suf)]]
+  df_v <- mapply(function(w, p) { if (is.na(w) || is.na(p) || p <= 0 || p >= 1) return(NA_real_)
+    tryCatch(uniroot(function(d) 2 * pt(-abs(w), d) - p, c(0.5, 1e4), extendInt = "no")$root, error = function(e) NA_real_) }, W_v, p_v)
+  df_v <- round(df_v)                                           # df are whole numbers; rounding removes the numerical noise of the p rounding
+  p_chk <- 2 * pt(-abs(W_v), df_v)
+  say("  %s %s: df recovered for %d of %d taxa; p reproduced (rel. error < 1%%) for %d", comparison, rank, sum(!is.na(df_v)), length(df_v),
+      sum(abs(p_chk - p_v) / p_v < 0.01, na.rm = TRUE))
+  ci_lo <- lfc - qt(0.975, df_v) * se_v; ci_hi <- lfc + qt(0.975, df_v) * se_v
   out <- data.frame(Comparison = comparison, Level = rank, Taxon = key$Taxon[k], Family = key$Family[k], Phylum = key$Phylum[k],
     Reference_group = lv[1], Compared_group = lv[2],
     Mean_pct_reference = round(sapply(r$taxon, function(id) mean_in(lv[1], id)), 3), Mean_pct_compared = round(sapply(r$taxon, function(id) mean_in(lv[2], id)), 3),
     Present_in_reference = sapply(r$taxon, function(id) prev_in(lv[1], id)), Present_in_compared = sapply(r$taxon, function(id) prev_in(lv[2], id)),
     Log_fold_change = round(lfc, 3), Fold_change = round(exp(lfc), 2), Higher_in = ifelse(lfc > 0, lv[2], lv[1]),
-    SE = round(r[[paste0("se_", suf)]], 3), p_value = signif(r[[paste0("p_", suf)]], 3), q_value_Holm = signif(q, 3),
+    SE = round(se_v, 3), df = df_v, CI95_low = round(ci_lo, 3), CI95_high = round(ci_hi, 3), p_value = signif(r[[paste0("p_", suf)]], 3), q_value_Holm = signif(q, 3),
     Significant = ifelse(!is.na(q) & q < ALPHA, "YES", "no"), Significance = pstar(q),
     Robust_to_pseudocount = ifelse(is.na(ss), "n/a", ifelse(ss, "yes", "no")), row.names = NULL)
   out$Verdict <- with(out, ifelse(Significant == "YES" & Robust_to_pseudocount != "no", paste("DIFFERENT: higher in", Higher_in),
@@ -982,13 +981,13 @@ forest <- function(level, n_top, title = NULL) {
            sig = factor(ifelse(Significant == "YES", "q < 0.05 (Holm)", "not significant"), levels = c("q < 0.05 (Holm)", "not significant")))
   ggplot(d, aes(Log_fold_change, reorder(key, Log_fold_change))) +
     geom_vline(xintercept = 0, colour = "grey60", linewidth = 0.3) +
-    geom_errorbar(aes(xmin = Log_fold_change - 1.96 * SE, xmax = Log_fold_change + 1.96 * SE, colour = sig), width = 0, orientation = "y", linewidth = 0.45) +
+    geom_errorbar(aes(xmin = CI95_low, xmax = CI95_high, colour = sig), width = 0, orientation = "y", linewidth = 0.45) +
     geom_point(aes(fill = sig, colour = sig), size = 2.3, shape = 21, stroke = 0.4) +
     scale_colour_manual(values = c("q < 0.05 (Holm)" = "#B3262D", "not significant" = "grey45"), name = NULL, drop = FALSE) +
     scale_fill_manual(values = c("q < 0.05 (Holm)" = "#B3262D", "not significant" = "white"), name = NULL, drop = FALSE) +
     scale_y_discrete(labels = function(x) sub("___.*$", "", x)) +
     facet_wrap(~ Comparison, scales = "free_y", ncol = 1, labeller = label_wrap_gen(34)) +
-    labs(x = "ANCOM-BC2 log fold change (95 % CI)\n> 0: higher in Starved (Fed vs Starved) or in Waminoa", y = NULL, title = title) +
+    labs(x = "ANCOM-BC2 log fold change (unadjusted 95 % t-CI; colour = Holm q)\n> 0: higher in Starved (Fed vs Starved) or in Waminoa", y = NULL, title = title) +
     theme(axis.text.y = element_text(face = if (level == "Genus") "italic" else "plain", size = 7), legend.position = "bottom") }
 p_anc_genus  <- forest("Genus", 15, "ANCOM-BC2, genus level")
 p_anc_family <- forest("Family", 15, "ANCOM-BC2, family level")
@@ -1015,48 +1014,10 @@ for (dn in c("Bray-Curtis", "Aitchison")) {
 
 
 # =============================================================================
-# 8. COMPARISON TABLES (previous run, SILVA 138.1 vs 138.2)
+# 8. EXCEL + SUMMARY
 # =============================================================================
-say("8. Comparison tables")
+say("8. Writing Excel")
 track <- tryCatch(read.csv(file.path(dirname(PS_RAW), "read_tracking.csv"), stringsAsFactors = FALSE), error = function(e) NULL)
-cmp_track <- NULL
-if (!is.null(track) && file.exists(PREV_TRACK)) {
-  old <- read.csv(PREV_TRACK, stringsAsFactors = FALSE)
-  cmp_track <- data.frame(Sample = track$Name, Input_pairs = track$input,
-    Filtered_pct_new = round(100 * track$filtered / track$input, 1), Merged_pct_new = round(100 * track$merged / track$input, 1),
-    Final_reads_new = track$final, Merged_pct_previous = round(100 * old$merged[match(track$Name, old$Name)] / old$input[match(track$Name, old$Name)], 1),
-    Final_reads_previous = old$no_artefact[match(track$Name, old$Name)])
-  cmp_track$Final_reads_change_pct <- round(100 * (cmp_track$Final_reads_new / cmp_track$Final_reads_previous - 1), 1)
-  names(cmp_track) <- sub("_new", " (this run: trunc 240/200, SILVA 138.2)", sub("_previous", " (previous: trunc 239/198)", names(cmp_track)))
-}
-silva_cmp <- NULL; silva_phy <- NULL; silva_gen <- NULL
-f_old <- file.path(dirname(PS_RAW), "taxa_old_db.rds")
-if (file.exists(f_old)) {
-  told <- as.data.frame(readRDS(f_old), stringsAsFactors = FALSE)[colnames(cnt0), , drop = FALSE]
-  rds_all <- colSums(cnt0)
-  rate <- function(tx, rk) c(ASVs = round(100 * mean(!is.na(tx[[rk]])), 1), Reads = round(100 * sum(rds_all[!is.na(tx[[rk]])]) / sum(rds_all), 1))
-  silva_cmp <- do.call(rbind, lapply(c("Phylum", "Class", "Order", "Family", "Genus", "Species"), function(rk)
-    data.frame(Rank = rk, Pct_ASVs_classified_138.1 = rate(told, rk)[1], Pct_ASVs_classified_138.2 = rate(tt0, rk)[1],
-               Pct_reads_classified_138.1 = rate(told, rk)[2], Pct_reads_classified_138.2 = rate(tt0, rk)[2])))
-  cl_old <- get_status(told, BLANKS)
-  silva_cmp <- rbind(silva_cmp, data.frame(Rank = "Contamination removed (% of reads, analysed animals)",
-    Pct_ASVs_classified_138.1 = NA, Pct_ASVs_classified_138.2 = NA,
-    Pct_reads_classified_138.1 = round(100 * (1 - sum(cnt0[ani, cl_old$status == KEPT]) / sum(cnt0[ani, ])), 1),
-    Pct_reads_classified_138.2 = round(100 * (1 - sum(cnt0[ani, keep_asv]) / sum(cnt0[ani, ])), 1)))
-  silva_phy <- as.data.frame.matrix(rowsum(rds_all, paste(ifelse(is.na(told$Phylum), "NA", told$Phylum), "->", ifelse(is.na(tt0$Phylum), "NA", tt0$Phylum))))
-  silva_phy <- data.frame(Phylum_138.1_to_138.2 = rownames(silva_phy), Reads = silva_phy[, 1], row.names = NULL)
-  silva_phy$Pct_reads <- round(100 * silva_phy$Reads / sum(rds_all), 2); silva_phy <- silva_phy[order(-silva_phy$Reads), ]
-  ch <- is.na(told$Genus) != is.na(tt0$Genus) | (!is.na(told$Genus) & !is.na(tt0$Genus) & told$Genus != tt0$Genus)
-  silva_gen <- data.frame(ASV = colnames(cnt0)[ch], Reads = rds_all[ch], Family_138.1 = told$Family[ch], Genus_138.1 = told$Genus[ch],
-                          Family_138.2 = tt0$Family[ch], Genus_138.2 = tt0$Genus[ch], row.names = NULL)
-  silva_gen <- head(silva_gen[order(-silva_gen$Reads), ], 300)
-}
-
-
-# =============================================================================
-# 9. EXCEL + SUMMARY
-# =============================================================================
-say("9. Writing Excel")
 tt_ps <- as.data.frame(as(tax_table(ps), "matrix"), stringsAsFactors = FALSE)
 rank_pct <- function(rank) {                          # % of reads per taxon and animal, after cleaning
   m <- counts(ps)[ani, , drop = FALSE]; x <- tt_ps[colnames(m), rank]; x[is.na(x) | x == ""] <- "Unclassified"
@@ -1070,10 +1031,6 @@ asv_tab <- data.frame(ASV = taxa_names(ps), tt_ps, t(counts(ps))[taxa_names(ps),
 sheets <- c(list(
   Samples = list(samples_tab, "Every library: reads after DADA2 and after cleaning, primer-dimer %, which were analysed / removed"),
   DADA2_read_tracking = list(track, "Reads kept at each DADA2 step per library (input, filtered, denoised, merged, non-chimeric, final)"),
-  Compare_previous_run = list(cmp_track, "Merging / final reads: this run (240/200, SILVA 138.2) vs previous run (239/198, SILVA 138.1)"),
-  SILVA_comparison = list(silva_cmp, "SILVA 138.1 vs 138.2: % classified per rank, and effect on the contamination estimate"),
-  SILVA_phylum_renaming = list(silva_phy, "Reads by phylum name in 138.1 -> 138.2 (shows renamed phyla, e.g. Proteobacteria -> Pseudomonadota)"),
-  SILVA_genus_changes = list(silva_gen, "ASVs whose genus differs between the databases (top 300 by reads)"),
   Why_NEGCON1 = list(why_negcon, "Plain-language explanation: what NEGCON1 is for and what the blocklist cannot do alone"),
   NEGCON1_contribution = list(neg_contrib, "How many reads each rule removes; rules 4 and 5 are the part that NEEDS NEGCON1"),
   NEGCON1_top_ASVs = list(neg_top, "The 40 most abundant ASVs in the blank, with the rule that removed them"),

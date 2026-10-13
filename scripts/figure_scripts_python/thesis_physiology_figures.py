@@ -1,7 +1,8 @@
 """Thesis physiology figures (Figures 4-11; Figure 3 is the phylogeny): one consistent style, no panel titles,
 Holm-adjusted Welch p-values printed to three decimals.
 
-Usage:  python thesis_physiology_figures.py <master_data_all_parameters_1.xlsx> <output folder>
+Usage (from the repository root):
+    python scripts/figure_scripts_python/thesis_physiology_figures.py data/physiology/master_data_all_parameters.xlsx figures
 """
 import sys, os, warnings
 import numpy as np, pandas as pd, matplotlib

@@ -1,7 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this repository, please cite it as below."
 title: "Resolving Starvation Responses of Photosymbiotic Holobionts: code, data and supplementary material"
-type: software
+type: dataset
+version: "1.1.0"
+date-released: "2026-10-13"
 authors:
   - family-names: Kola
     given-names: Danjel
