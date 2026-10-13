@@ -4,7 +4,8 @@
 
 Code, data and supplementary tables for the Master's thesis **"Resolving Starvation Responses of Photosymbiotic Holobionts"**
 (Danjel Kola, M.Sc. Microbiology, Carl von Ossietzky Universität Oldenburg; thesis work at HIFMB, supervisor Dr. Nils Rädecker).
-In the thesis this repository is cited as **Kola (2026)** and described in **Appendix C**.
+In the thesis this repository is cited as **Kola (2026)**; supplementary tables are cited by the sheet name in the supplementary workbook,
+for example *(Kola, 2026; sheet Table_A1)*. The thesis cites **version 1.1.0**: <https://doi.org/10.5281/zenodo.23337121>.
 
 The thesis compares fed and starved *Exaiptasia diaphana* (sea anemone) and *Waminoa* sp. (acoel flatworm):
 symbiont density, oxygen production, photosynthetic efficiency (Fv/Fm), ammonium uptake and host protein, plus the
@@ -109,5 +110,7 @@ Tab colours: blue = physiology, green = 16S, orange = figure sheets (the figure 
 
 Kola, D. (2026). *Resolving starvation responses of photosymbiotic holobionts: Code, data and supplementary material* [Data set and software].
 Zenodo. <https://doi.org/10.5281/zenodo.23264022> (concept DOI, always resolves to the latest version). See also `CITATION.cff`.
+
+The thesis cites version 1.1.0: <https://doi.org/10.5281/zenodo.23337121>.
 
 Code: MIT (`LICENSE`). Data, tables and figures: CC BY 4.0.
